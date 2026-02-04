@@ -1,4 +1,4 @@
-# GitHub Codespaces ♥️ Django
+
 
 # Bioinformatics Sample Management System
 
@@ -20,3 +20,36 @@ Donor
    → SequencingRun
      → Analysis
        → Metrics / Reports
+
+
+## uruchomienie projektu:
+Sklonować repozytorium
+
+`git clone https://github.com/dianayanko/database_django_sequencing-repository.git`
+
+`cd database_django_sequencing-repository`
+
+
+Stworzyć wirtualne środowisko
+
+`python -m venv venv
+source venv/bin/activate   # Linux / Mac`
+
+`
+venv\Scripts\activate # Windows`
+
+
+Zainstalować wymagania
+
+`pip install -r requirements.txt`
+
+
+Uruchomić migracje (utworzyć bazę)
+
+`python manage.py migrate`
+
+
+Uruchomić serwer Django
+
+`python manage.py runserver`
+
