@@ -1,33 +1,149 @@
-{% load django_browser_reload %}
+{% extends 'base.html' %}
 {% load static %}
 
-<!doctype html>
-<html lang="en">
+{% block title %}Dashboard | Sequencing Lab{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="GitHub Codespaces ♥️ Django">
-    <meta name="author" content="GitHub Codespaces">
-    <meta name="generator" content="GitHub Codespaces">
-    <meta name="theme-color" content="#000000">
-    <title>{% block title %}{{ title }} | GitHub Codespaces ♥️ Django{% endblock %}</title>
-    
-    <link rel="stylesheet" href="{% static 'main.css' %}">
-</head>
+{% block breadcrumb %}
+<a href="#">Home</a> / <span>Dashboard</span>
+{% endblock %}
 
-<body>
-    <div class="App">
-        <header class="App-header">
-            <img src="{% static 'Octocat.png' %}" class="App-logo" alt="logo" />
-            <p>
-                GitHub Codespaces <span class="heart">♥️</span> Django
-            </p>
-            <p class="small">
-                Edit <code>hello_world/templates/index.html</code> and see changes live!
-            </p>
-        </header>
-    </div>
-</body>
+{% block content %}
+<div class="dashboard">
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <div class="welcome-content">
+            <h2>Welcome to Sequencing Lab</h2>
+            <p>Manage your samples, sequencing runs, and bioinformatics analyses in one place.</p>
+        </div>
+    </section>
 
-</html>
+    <!-- Quick Stats -->
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">�</div>
+            <div class="stat-info">
+                <h3>Total Samples</h3>
+                <p class="stat-number">{{ total_samples }}</p>
+                <span class="stat-label">{% if total_samples == 1 %}sample{% else %}samples{% endif %} in database</span>
+            </div>
+        </div>
+
+        {% if latest_sample %}
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">✨</div>
+            <div class="stat-info">
+                <h3>Most Recent</h3>
+                <p class="stat-number" style="font-size: 14px; margin: 8px 0;">{{ latest_sample.sample_id }}</p>
+                <span class="stat-label">{{ latest_sample.created_at|date:"M d, Y" }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Recent Samples -->
+    {% if recent_samples %}
+    <section class="activity-section">
+        <h3>Recently Added Samples</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Sample ID</th>
+                    <th>Donor</th>
+                    <th>Tissue Type</th>
+                    <th>Status</th>
+                    <th>Added</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sample in recent_samples %}
+                <tr>
+                    <td><strong>{{ sample.sample_id }}</strong></td>
+                    <td>{{ sample.donor.donor_id }}</td>
+                    <td>{{ sample.tissue_type.name|default:"—" }}</td>
+                    <td>
+                        <span class="badge" style="background: #e3f2fd; color: #1976d2;">{{ sample.get_status_display|default:"Active" }}</span>
+                    </td>
+                    <td>{{ sample.created_at|date:"M d, Y" }}</td>
+                    <td><a href="{% url 'sample_detail' sample.pk %}" style="color: #1976d2; text-decoration: none; font-weight: 500;">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% else %}
+    <section class="activity-section">
+        <h3>Recently Added Samples</h3>
+        <p style="padding: 20px; color: #666; text-align: center;">No samples in database yet.</p>
+    </section>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <a href="/admin/login/" class="action-btn primary" style="text-decoration: none; display: inline-block;">
+    Admin Panel
+</a>
+
+            <a href="/api/sequencing/projects/list/" class="action-btn secondary" style="text-decoration: none; display: inline-block;">View Projects</a>
+        </div>
+    </section>
+</div>
+
+<style>
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #ddd;
+    margin: 16px 0;
+}
+
+.data-table thead {
+    background: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.data-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.data-table a {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.data-table a:hover {
+    text-decoration: underline;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.action-buttons a {
+    margin-right: 8px;
+}
+</style>
+{% endblock %}

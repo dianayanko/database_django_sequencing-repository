@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}File: {{ file.name }}{% endblock %}
+
+{% block content %}
+<h1>File details</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <td>{{ file.name }}</td>
+  </tr>
+  <tr>
+    <th>Role</th>
+    <td>{{ file.file_role }}</td>
+  </tr>
+  <tr>
+    <th>Sequencing Run</th>
+    <td>{% if file.sequencing_run %}{{ file.sequencing_run.name }}{% else %}—{% endif %}</td>
+  </tr>
+  <tr>
+    <th>Analysis</th>
+    <td>{% if file.analysis %}{{ file.analysis.name }}{% else %}—{% endif %}</td>
+  </tr>
+  <tr>
+    <th>Created</th>
+    <td>{{ file.created_at|date:"Y-m-d H:i" }}</td>
+  </tr>
+  {% if file.file_path %}
+  <tr>
+    <th>File path</th>
+    <td><a href="{{ file.file_path }}" target="_blank">{{ file.file_path }}</a></td>
+  </tr>
+  {% endif %}
+  {% if file.checksum_md5 %}
+  <tr>
+    <th>MD5</th>
+    <td>{{ file.checksum_md5 }}</td>
+  </tr>
+  {% endif %}
+</table>
+
+{% if download_url %}
+<p><a href="{{ download_url }}" target="_blank">Download file</a></p>
+{% endif %}
+
+<p><a href="{% url 'files_list' %}">Back to file list</a></p>
+{% endblock %}

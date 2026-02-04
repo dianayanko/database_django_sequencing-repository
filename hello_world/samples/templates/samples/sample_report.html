@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+
+{% block title %}Sample Report: {{ sample.sample_id }}{% endblock %}
+{% block page_title %}Sample Report: {{ sample.sample_id }}{% endblock %}
+
+{% block content %}
+<div class="sample-report">
+    
+    <!-- Sample Metadata Section -->
+    <section class="report-section">
+        <h2>Sample Information</h2>
+        <table>
+            <tr>
+                <th>Sample ID</th>
+                <td>{{ sample.sample_id }}</td>
+            </tr>
+            <tr>
+                <th>Sample Type</th>
+                <td>{{ sample.get_sample_type_display }}</td>
+            </tr>
+            <tr>
+                <th>Tissue Type</th>
+                <td>{% if sample.tissue_type %}{{ sample.tissue_type.name }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Collection Date</th>
+                <td>{% if sample.collection_date %}{{ sample.collection_date|date:'Y-m-d' }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Passage Number</th>
+                <td>{% if sample.passage_number %}{{ sample.passage_number }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Cell Count</th>
+                <td>{% if sample.cell_count %}{{ sample.cell_count|intcomma }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Viability</th>
+                <td>{% if sample.viability %}{{ sample.viability }}%{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Storage Conditions</th>
+                <td>{% if sample.storage_conditions %}{{ sample.get_storage_conditions_display }}{% else %}—{% endif %}</td>
+            </tr>
+            {% if sample.description %}
+            <tr>
+                <th>Description</th>
+                <td>{{ sample.description }}</td>
+            </tr>
+            {% endif %}
+            {% if sample.notes %}
+            <tr>
+                <th>Notes</th>
+                <td>{{ sample.notes }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Created</th>
+                <td>{{ sample.created_at|date:'Y-m-d H:i' }}</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Donor Metadata Section -->
+    {% if donor %}
+    <section class="report-section">
+        <h2>Donor Information</h2>
+        <table>
+            <tr>
+                <th>Donor ID</th>
+                <td>{{ donor.donor_id }}</td>
+            </tr>
+            <tr>
+                <th>Organism</th>
+                <td>{{ donor.organism.scientific_name }} ({{ donor.organism.common_name }})</td>
+            </tr>
+            <tr>
+                <th>Sex</th>
+                <td>{{ donor.get_sex_display }}</td>
+            </tr>
+            <tr>
+                <th>Age</th>
+                <td>{% if donor.age %}{{ donor.age }} years{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Disease State</th>
+                <td>{{ donor.get_disease_state_display }}</td>
+            </tr>
+            {% if donor.genotype %}
+            <tr>
+                <th>Genotype</th>
+                <td>{{ donor.genotype }}</td>
+            </tr>
+            {% endif %}
+            {% if donor.phenotype %}
+            <tr>
+                <th>Phenotype</th>
+                <td>{{ donor.phenotype }}</td>
+            </tr>
+            {% endif %}
+            {% if donor.notes %}
+            <tr>
+                <th>Notes</th>
+                <td>{{ donor.notes }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </section>
+    {% endif %}
+
+    <!-- Sequencing Runs Section -->
+    {% if sample.sequencing_run_set.all %}
+    <section class="report-section">
+        <h2>Sequencing Runs</h2>
+        {% for run in sample.sequencing_run_set.all %}
+        <div class="run-subsection">
+            <h3>{{ run.run_id }}</h3>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ run.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <th>Platform</th>
+                    <td>{% if run.platform %}{{ run.platform.name }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Project</th>
+                    <td>{% if run.project %}{{ run.project.project_id }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Run Date</th>
+                    <td>{% if run.run_date %}{{ run.run_date|date:'Y-m-d' }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Total Reads</th>
+                    <td>{% if run.total_reads %}{{ run.total_reads|intcomma }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Quality Score (Q30)</th>
+                    <td>{% if run.quality_score_q30 %}{{ run.quality_score_q30|floatformat:2 }}%{% else %}—{% endif %}</td>
+                </tr>
+            </table>
+
+            <!-- Analyses for this Run -->
+            {% if run.analysis_set.all %}
+            <h4>Analyses</h4>
+            {% for analysis in run.analysis_set.all %}
+            <div class="analysis-subsection">
+                <h5>{{ analysis.analysis_id }} ({{ analysis.get_analysis_type_display }})</h5>
+                <table>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ analysis.get_status_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Pipeline</th>
+                        <td>{{ analysis.pipeline_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Started</th>
+                        <td>{% if analysis.started_at %}{{ analysis.started_at|date:'Y-m-d H:i' }}{% else %}—{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Completed</th>
+                        <td>{% if analysis.completed_at %}{{ analysis.completed_at|date:'Y-m-d H:i' }}{% else %}—{% endif %}</td>
+                    </tr>
+                </table>
+
+                <!-- Metrics for this Analysis -->
+                {% if analysis.qc_metrics or analysis.alignment_metrics or analysis.variant_metrics or analysis.expression_metrics %}
+                <h6>Metrics</h6>
+                <div class="metrics-container">
+                    {% if analysis.qc_metrics %}
+                    <div class="metric-box">
+                        <h6>QC Metrics</h6>
+                        <dl>
+                            {% for field, value in analysis.qc_metrics.__dict__.items %}
+                                {% if not field.startswith '_' and not field == 'id' and not field.startswith 'id' %}
+                                <dt>{{ field|title|replace:'_',' ' }}</dt>
+                                <dd>{{ value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </dl>
+                    </div>
+                    {% endif %}
+                    {% if analysis.alignment_metrics %}
+                    <div class="metric-box">
+                        <h6>Alignment Metrics</h6>
+                        <dl>
+                            {% for field, value in analysis.alignment_metrics.__dict__.items %}
+                                {% if not field.startswith '_' and not field == 'id' and not field.startswith 'id' %}
+                                <dt>{{ field|title|replace:'_',' ' }}</dt>
+                                <dd>{{ value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </dl>
+                    </div>
+                    {% endif %}
+                    {% if analysis.variant_metrics %}
+                    <div class="metric-box">
+                        <h6>Variant Metrics</h6>
+                        <dl>
+                            {% for field, value in analysis.variant_metrics.__dict__.items %}
+                                {% if not field.startswith '_' and not field == 'id' and not field.startswith 'id' %}
+                                <dt>{{ field|title|replace:'_',' ' }}</dt>
+                                <dd>{{ value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </dl>
+                    </div>
+                    {% endif %}
+                    {% if analysis.expression_metrics %}
+                    <div class="metric-box">
+                        <h6>Expression Metrics</h6>
+                        <dl>
+                            {% for field, value in analysis.expression_metrics.__dict__.items %}
+                                {% if not field.startswith '_' and not field == 'id' and not field.startswith 'id' %}
+                                <dt>{{ field|title|replace:'_',' ' }}</dt>
+                                <dd>{{ value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </dl>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Reports for this Analysis -->
+                {% if analysis.reports.all %}
+                <h6>Reports</h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Summary</th>
+                            <th>Quality Flag</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in analysis.reports.all %}
+                        <tr>
+                            <td>{{ report.get_report_type_display }}</td>
+                            <td>{{ report.summary }}</td>
+                            <td>{{ report.quality_flag }}</td>
+                            <td>{{ report.created_at|date:'Y-m-d H:i' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+
+                <!-- Files for this Analysis -->
+                {% if analysis.fileassociation_set.all %}
+                <h6>Associated Files</h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Role</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file_assoc in analysis.fileassociation_set.all %}
+                        <tr>
+                            <td>{{ file_assoc.file_metadata.name }}</td>
+                            <td>{{ file_assoc.file_metadata.file_role }}</td>
+                            <td>{{ file_assoc.file_metadata.get_file_type_display }}</td>
+                            <td>{% if file_assoc.file_metadata.file_size %}{{ file_assoc.file_metadata.file_size|filesizeformat }}{% else %}—{% endif %}</td>
+                            <td>{{ file_assoc.file_metadata.created_at|date:'Y-m-d H:i' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No analyses for this run.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    {% else %}
+    <section class="report-section">
+        <h2>Sequencing Runs</h2>
+        <p>No sequencing runs for this sample.</p>
+    </section>
+    {% endif %}
+
+    <p><a href="{% url 'sample_list' %}">Back to Samples</a></p>
+</div>
+{% endblock %}

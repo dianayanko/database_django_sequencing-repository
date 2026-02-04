@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Sample | Sequencing Lab{% endblock %}
+{% block page_title %}Add Sample{% endblock %}
+
+{% block breadcrumb %}
+<a href="#">Home</a> / <a href="{% url 'sample_list' %}">Samples</a> / <span>Add</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-title">
+            <h2>Add New Sample</h2>
+            <p>Create a new biological sample record</p>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            <!-- Required Fields Group -->
+            <fieldset class="form-fieldset">
+                <legend>Required Information</legend>
+                
+                <div class="form-group">
+                    <label for="{{ form.sample_id.id_for_label }}">
+                        {{ form.sample_id.label }} <span class="required">*</span>
+                    </label>
+                    {{ form.sample_id }}
+                    {% if form.sample_id.errors %}
+                        <div class="form-errors">
+                            {% for error in form.sample_id.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.donor.id_for_label }}">
+                        {{ form.donor.label }} <span class="required">*</span>
+                    </label>
+                    {{ form.donor }}
+                    {% if form.donor.errors %}
+                        <div class="form-errors">
+                            {% for error in form.donor.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.tissue_type.id_for_label }}">
+                        {{ form.tissue_type.label }}
+                    </label>
+                    {{ form.tissue_type }}
+                    {% if form.tissue_type.errors %}
+                        <div class="form-errors">
+                            {% for error in form.tissue_type.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.sample_type.id_for_label }}">
+                        {{ form.sample_type.label }}
+                    </label>
+                    {{ form.sample_type }}
+                    {% if form.sample_type.errors %}
+                        <div class="form-errors">
+                            {% for error in form.sample_type.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <!-- Collection Details Group -->
+            <fieldset class="form-fieldset">
+                <legend>Collection Details</legend>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.collection_date.id_for_label }}">
+                            {{ form.collection_date.label }}
+                        </label>
+                        {{ form.collection_date }}
+                        {% if form.collection_date.errors %}
+                            <div class="form-errors">
+                                {% for error in form.collection_date.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.passage_number.id_for_label }}">
+                            {{ form.passage_number.label }}
+                        </label>
+                        {{ form.passage_number }}
+                        {% if form.passage_number.errors %}
+                            <div class="form-errors">
+                                {% for error in form.passage_number.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.cell_count.id_for_label }}">
+                            {{ form.cell_count.label }}
+                        </label>
+                        {{ form.cell_count }}
+                        {% if form.cell_count.errors %}
+                            <div class="form-errors">
+                                {% for error in form.cell_count.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.viability.id_for_label }}">
+                            {{ form.viability.label }}
+                        </label>
+                        {{ form.viability }}
+                        {% if form.viability.errors %}
+                            <div class="form-errors">
+                                {% for error in form.viability.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.storage_conditions.id_for_label }}">
+                        {{ form.storage_conditions.label }}
+                    </label>
+                    {{ form.storage_conditions }}
+                    {% if form.storage_conditions.errors %}
+                        <div class="form-errors">
+                            {% for error in form.storage_conditions.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <!-- Documentation Group -->
+            <fieldset class="form-fieldset">
+                <legend>Documentation</legend>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">
+                        {{ form.description.label }}
+                    </label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="form-errors">
+                            {% for error in form.description.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.notes.id_for_label }}">
+                        {{ form.notes.label }}
+                    </label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                        <div class="form-errors">
+                            {% for error in form.notes.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="action-btn primary">Create Sample</button>
+                <a href="{% url 'sample_list' %}" class="action-btn secondary">Cancel</a>
+            </div>
+        </form>
+    </section>
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .header-title h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .header-title p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .form-section {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 32px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        max-width: 800px;
+    }
+
+    .form-card {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .form-fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .form-fieldset legend {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .required {
+        color: #ef4444;
+    }
+
+    .form-input,
+    .form-textarea,
+    select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #0f172a;
+        background-color: #ffffff;
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #2dd4bf;
+        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    select {
+        cursor: pointer;
+    }
+
+    .form-errors {
+        margin-top: 6px;
+        padding: 8px 12px;
+        background-color: #fee2e2;
+        border-left: 3px solid #ef4444;
+        border-radius: 4px;
+    }
+
+    .form-errors p {
+        font-size: 13px;
+        color: #991b1b;
+        margin: 0;
+    }
+
+    .form-errors p:not(:last-child) {
+        margin-bottom: 4px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        margin-top: 32px;
+        padding-top: 32px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .form-actions .action-btn {
+        padding: 12px 24px;
+    }
+
+    @media (max-width: 768px) {
+        .form-section {
+            padding: 20px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .action-btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

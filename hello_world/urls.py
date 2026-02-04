@@ -19,13 +19,24 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+#from rest_framework.documentation import include_docs_urls
 
 from hello_world.core import views as core_views
+from hello_world.admin_site import admin_site
 
 urlpatterns = [
-    path("", core_views.index),
-    path("admin/", admin.site.urls),
+    path("", core_views.index, name='dashboard'),
+    path("admin/", admin_site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
+    # Web routes
+    path("samples/", include("hello_world.samples.urls")),
+    # API endpoints
+    path("api/", include("rest_framework.urls")),
+    #path("api/docs/", include_docs_urls(title="Sequencing Repository API")),
+    path("api/samples/", include("hello_world.samples.urls")),
+    path("api/sequencing/", include("hello_world.sequencing.urls")),
+    path("api/analysis/", include("hello_world.analysis.urls")),
+    path("api/files/", include("hello_world.files.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

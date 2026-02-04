@@ -1,0 +1,107 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sequencing Data Management Platform">
+    <meta name="author" content="Research Team">
+    <meta name="theme-color" content="#ffffff">
+    <title>{% block title %}Sequencing Lab | Dashboard{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">SEQ Lab</span>
+                    <span class="logo-subtitle">Analysis Portal</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Main</h3>
+                    <ul class="nav-list">
+                        <li><a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a></li>
+                        <li><a href="{% url 'sample_list' %}" class="nav-link">Samples</a></li>
+                        <li><a href="{% url 'project_list' %}" class="nav-link">Projects</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Data</h3>
+                    <ul class="nav-list">
+                        <li><a href="{% url 'sequencing_run_list' %}" class="nav-link">Sequencing Runs</a></li>
+                        <li><a href="{% url 'library_prep_list' %}" class="nav-link">Library Prep</a></li>
+                        <li><a href="{% url 'analysis_list' %}" class="nav-link">Analyses</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Files</h3>
+                    <ul class="nav-list">
+                        <li><a href="{% url 'files_list' %}" class="nav-link">Files</a></li>
+                        <li><a href="{% url 'storage_list' %}" class="nav-link">Storage</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p class="sidebar-version">v1.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <div class="nav-left">
+                    <button class="menu-toggle" aria-label="Toggle sidebar">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
+
+                <div class="nav-right">
+                    <div class="breadcrumb">
+                        {% block breadcrumb %}
+                        <a href="#">Home</a>
+                        {% endblock %}
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-btn">User</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="content">
+                {% block content %}
+                {% endblock %}
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p>&copy; 2026 Sequencing Lab. Research data management platform.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Simple sidebar toggle for mobile
+        document.querySelector('.menu-toggle')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+    </script>
+</body>
+
+</html>

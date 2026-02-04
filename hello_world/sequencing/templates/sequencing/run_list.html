@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Sequencing Runs | Sequencing Lab{% endblock %}
+{% block page_title %}Sequencing Runs{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Sequencing Runs</h2>
+    {% if runs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Run ID</th>
+                    <th>Project</th>
+                    <th>Sample</th>
+                    <th>Run Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in runs %}
+                <tr>
+                    <td>{{ r.run_id }}</td>
+                    <td>{{ r.project.project_id }}</td>
+                    <td>{{ r.sample.sample_id }}</td>
+                    <td>{{ r.run_date|date:"Y-m-d" }}</td>
+                    <td>{{ r.get_status_display }}</td>
+                    <td>
+                        <a href="{% url 'analyses_for_run' r.run_id %}">View Analyses</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No sequencing runs found.</p>
+    {% endif %}
+</div>
+{% endblock %}

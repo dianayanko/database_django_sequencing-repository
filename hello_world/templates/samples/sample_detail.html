@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ sample.sample_id }} | Sequencing Lab{% endblock %}
+{% block page_title %}{{ sample.sample_id }}{% endblock %}
+
+{% block breadcrumb %}
+<a href="#">Home</a> / <a href="{% url 'sample_list' %}">Samples</a> / <span>{{ sample.sample_id }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Detail Header -->
+    <div class="detail-header">
+        <div class="header-info">
+            <h2>{{ sample.sample_id }}</h2>
+            <p>Sample from {{ sample.donor.donor_id }}</p>
+        </div>
+        <span class="badge badge-{{ sample.sample_type }}">{{ sample.get_sample_type_display }}</span>
+    </div>
+
+    <!-- Main Detail Card -->
+    <div class="detail-card">
+        <div class="detail-row">
+            <div class="detail-item">
+                <h4>Donor</h4>
+                <p>{{ sample.donor.donor_id }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Organism</h4>
+                <p>{{ sample.donor.organism.common_name }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Tissue Type</h4>
+                <p>{{ sample.tissue_type.name|default:"Not specified" }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Sample Type</h4>
+                <p>{{ sample.get_sample_type_display }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collection Details -->
+    <div class="detail-card">
+        <h3>Collection Details</h3>
+        <div class="detail-row">
+            <div class="detail-item">
+                <h4>Collection Date</h4>
+                <p>{{ sample.collection_date|date:"Y-m-d"|default:"Not specified" }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Passage Number</h4>
+                <p>{{ sample.passage_number|default:"—" }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Storage Conditions</h4>
+                <p>{{ sample.storage_conditions|default:"Not specified" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Characteristics -->
+    <div class="detail-card">
+        <h3>Sample Characteristics</h3>
+        <div class="detail-row">
+            <div class="detail-item">
+                <h4>Cell Count</h4>
+                <p>{{ sample.cell_count|default:"—" }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Viability</h4>
+                <p>
+                    {% if sample.viability %}
+                        {{ sample.viability }}%
+                    {% else %}
+                        —
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    {% if sample.description %}
+        <div class="detail-card">
+            <h3>Description</h3>
+            <p class="description-text">{{ sample.description }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Notes -->
+    {% if sample.notes %}
+        <div class="detail-card">
+            <h3>Notes</h3>
+            <p class="notes-text">{{ sample.notes }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Metadata -->
+    <div class="detail-card metadata">
+        <div class="detail-row">
+            <div class="detail-item">
+                <h4>Created</h4>
+                <p>{{ sample.created_at|date:"Y-m-d H:i" }}</p>
+            </div>
+            <div class="detail-item">
+                <h4>Last Updated</h4>
+                <p>{{ sample.updated_at|date:"Y-m-d H:i" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+        <a href="{% url 'sample_list' %}" class="action-btn secondary">Back to Samples</a>
+    </div>
+</div>
+
+<style>
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .header-info h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .header-info p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-bulk {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+
+    .badge-single_cell {
+        background-color: #ddd6fe;
+        color: #4338ca;
+    }
+
+    .badge-sorted_cell {
+        background-color: #d1d5db;
+        color: #374151;
+    }
+
+    .badge-organoid {
+        background-color: #fed7aa;
+        color: #92400e;
+    }
+
+    .badge-primary_culture {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-cell_line {
+        background-color: #fce7f3;
+        color: #831843;
+    }
+
+    .badge-other {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+
+    .detail-card {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .detail-card h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 20px;
+        margin-top: 0;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+    }
+
+    .detail-item h4 {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-item p {
+        font-size: 14px;
+        color: #334155;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    .description-text,
+    .notes-text {
+        font-size: 14px;
+        color: #334155;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .metadata {
+        background-color: #f8fafc;
+    }
+
+    .detail-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+    }
+
+    @media (max-width: 768px) {
+        .detail-header {
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

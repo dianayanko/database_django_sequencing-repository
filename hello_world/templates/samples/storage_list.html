@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Storage Overview | Sequencing Lab{% endblock %}
+{% block page_title %}Storage Overview{% endblock %}
+
+{% block breadcrumb %}
+<a href="#">Home</a> / <a href="{% url 'sample_list' %}">Samples</a> / <span>Storage</span>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Storage Overview</h2>
+    {% for group in groups %}
+        <section style="margin-bottom:24px">
+            <h3>{{ group.label }}</h3>
+            {% if group.samples.exists %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sample ID</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sample in group.samples %}
+                        <tr>
+                            <td><a href="{% url 'sample_detail' sample.pk %}">{{ sample.sample_id }}</a></td>
+                            <td>{{ sample.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No samples assigned.</p>
+            {% endif %}
+        </section>
+    {% endfor %}
+</div>
+{% endblock %}

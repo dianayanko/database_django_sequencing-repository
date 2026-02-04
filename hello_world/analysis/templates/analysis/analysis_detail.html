@@ -1,0 +1,38 @@
+# hello_world/analysis/views_lists.py
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Analysis  # adjust if your model name/path is different
+
+def analysis_detail(request, analysis_id):
+    # Fetch the analysis object or return 404
+    analysis = get_object_or_404(Analysis, id=analysis_id)
+
+    # Build the response data
+    response_data = {
+        "id": analysis.id,
+        "name": analysis.name,
+    }
+
+    # Safe serialization of metrics
+    if hasattr(analysis, "metrics") and analysis.metrics:
+        metrics = analysis.metrics
+
+        # Expression metrics
+        if hasattr(metrics, "expression_metrics") and metrics.expression_metrics:
+            response_data["expression_metrics"] = {
+                k: v for k, v in vars(metrics.expression_metrics).items() if not k.startswith("_")
+            }
+
+        # Alignment metrics
+        if hasattr(metrics, "alignment_metrics") and metrics.alignment_metrics:
+            response_data["alignment_metrics"] = {
+                k: v for k, v in vars(metrics.alignment_metrics).items() if not k.startswith("_")
+            }
+
+        # Variant metrics
+        if hasattr(metrics, "variant_metrics") and metrics.variant_metrics:
+            response_data["variant_metrics"] = {
+                k: v for k, v in vars(metrics.variant_metrics).items() if not k.startswith("_")
+            }
+
+    return JsonResponse(response_data)

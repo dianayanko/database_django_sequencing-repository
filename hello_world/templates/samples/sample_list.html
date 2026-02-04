@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Samples | Sequencing Lab{% endblock %}
+{% block page_title %}Samples{% endblock %}
+
+{% block breadcrumb %}
+<a href="#">Home</a> / <span>Samples</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-title">
+            <h2>Sample Inventory</h2>
+            <p>Manage biological samples</p>
+        </div>
+        <a href="{% url 'sample_create' %}" class="action-btn primary">Add Sample</a>
+    </div>
+
+    <!-- Samples Table -->
+    <section class="table-section">
+        {% if samples %}
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sample ID</th>
+                            <th>Donor</th>
+                            <th>Tissue Type</th>
+                            <th>Sample Type</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sample in samples %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'sample_detail' sample.pk %}" class="link-primary">
+                                        {{ sample.sample_id }}
+                                    </a>
+                                </td>
+                                <td>{{ sample.donor.donor_id }}</td>
+                                <td>{{ sample.tissue_type.name|default:"—" }}</td>
+                                <td>
+                                    <span class="badge badge-{{ sample.sample_type }}">
+                                        {{ sample.get_sample_type_display }}
+                                    </span>
+                                </td>
+                                <td>{{ sample.created_at|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="{% url 'sample_detail' sample.pk %}" class="action-link">View</a>
+                                        <a href="{% url 'sequencing_run_create_for_sample' sample.sample_id %}" class="action-link">Add Sequencing Run</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <p>Total: <strong>{{ samples|length }}</strong> samples</p>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>No samples found</h3>
+                <p>Get started by adding your first sample.</p>
+                <a href="{% url 'sample_create' %}" class="action-btn primary">Add Sample</a>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .header-title h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .header-title p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .table-section {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .data-table thead {
+        background-color: #f1f5f9;
+    }
+
+    .data-table th {
+        padding: 14px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #334155;
+        border-bottom: 2px solid #cbd5e1;
+    }
+
+    .data-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+    }
+
+    .data-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .link-primary {
+        color: #2dd4bf;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .link-primary:hover {
+        text-decoration: underline;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-bulk {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+
+    .badge-single_cell {
+        background-color: #ddd6fe;
+        color: #4338ca;
+    }
+
+    .badge-sorted_cell {
+        background-color: #d1d5db;
+        color: #374151;
+    }
+
+    .badge-organoid {
+        background-color: #fed7aa;
+        color: #92400e;
+    }
+
+    .badge-primary_culture {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-cell_line {
+        background-color: #fce7f3;
+        color: #831843;
+    }
+
+    .badge-other {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+
+    .action-links {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-link {
+        color: #2dd4bf;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .action-link:hover {
+        text-decoration: underline;
+    }
+
+    .table-footer {
+        padding: 16px;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        text-align: right;
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .empty-state {
+        padding: 60px 24px;
+        text-align: center;
+    }
+
+    .empty-state h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Analyses | Sequencing Lab{% endblock %}
+{% block page_title %}Analyses{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Analyses</h2>
+    {% if analyses %}
+        <h3>{% if run %}Analyses for {{ run.run_id }}{% else %}All Analyses{% endif %}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Analysis ID</th>
+                    <th>Type</th>
+                    <th>Pipeline</th>
+                    <th>Run</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in analyses %}
+                <tr>
+                    <td>{{ a.analysis_id }}</td>
+                    <td>{{ a.get_analysis_type_display }}</td>
+                    <td>{{ a.pipeline_name }}</td>
+                    <td>{{ a.sequencing_run.run_id }}</td>
+                    <td>{{ a.get_status_display }}</td>
+                    <td>
+                        <a href="{% url 'analysis_detail' a.pk %}">View Metrics</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No analyses found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Project: {{ project.project_id }}{% endblock %}
+{% block page_title %}Project: {{ project.project_id }}{% endblock %}
+
+{% block content %}
+<div class="project-detail">
+    
+    <!-- Project Information Section -->
+    <section class="report-section">
+        <h2>Project Information</h2>
+        <table>
+            <tr>
+                <th>Project ID</th>
+                <td>{{ project.project_id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ project.title }}</td>
+            </tr>
+            <tr>
+                <th>Project Type</th>
+                <td>{{ project.get_project_type_display }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ project.get_status_display }}</td>
+            </tr>
+            <tr>
+                <th>Principal Investigator</th>
+                <td>{% if project.pi_name %}{{ project.pi_name }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Institution</th>
+                <td>{% if project.institution %}{{ project.institution }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td>{% if project.start_date %}{{ project.start_date|date:'Y-m-d' }}{% else %}—{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Completion Date</th>
+                <td>{% if project.completion_date %}{{ project.completion_date|date:'Y-m-d' }}{% else %}—{% endif %}</td>
+            </tr>
+            {% if project.description %}
+            <tr>
+                <th>Description</th>
+                <td>{{ project.description }}</td>
+            </tr>
+            {% endif %}
+            {% if project.notes %}
+            <tr>
+                <th>Notes</th>
+                <td>{{ project.notes }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Created</th>
+                <td>{{ project.created_at|date:'Y-m-d H:i' }}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{{ project.updated_at|date:'Y-m-d H:i' }}</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Samples in Project -->
+    {% if project.samples.all %}
+    <section class="report-section">
+        <h2>Samples ({{ project.samples.count }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sample ID</th>
+                    <th>Tissue Type</th>
+                    <th>Sample Type</th>
+                    <th>Donor</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sample in project.samples.all %}
+                <tr>
+                    <td><a href="{% url 'sample_report' sample.sample_id %}">{{ sample.sample_id }}</a></td>
+                    <td>{% if sample.tissue_type %}{{ sample.tissue_type.name }}{% else %}—{% endif %}</td>
+                    <td>{{ sample.get_sample_type_display }}</td>
+                    <td><a href="#">{{ sample.donor.donor_id }}</a></td>
+                    <td>{{ sample.created_at|date:'Y-m-d' }}</td>
+                    <td><a href="{% url 'sample_report' sample.sample_id %}">View Report</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% else %}
+    <section class="report-section">
+        <h2>Samples</h2>
+        <p>No samples assigned to this project.</p>
+    </section>
+    {% endif %}
+
+    <!-- Sequencing Runs -->
+    {% if project.sequencing_run_set.all %}
+    <section class="report-section">
+        <h2>Sequencing Runs ({{ project.sequencing_run_set.count }})</h2>
+        {% for run in project.sequencing_run_set.all %}
+        <div class="run-subsection">
+            <h3>{{ run.run_id }}</h3>
+            <table>
+                <tr>
+                    <th>Sample</th>
+                    <td>{% if run.sample %}<a href="{% url 'sample_report' run.sample.sample_id %}">{{ run.sample.sample_id }}</a>{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ run.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <th>Platform</th>
+                    <td>{% if run.platform %}{{ run.platform.name }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Run Date</th>
+                    <td>{% if run.run_date %}{{ run.run_date|date:'Y-m-d' }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Total Reads</th>
+                    <td>{% if run.total_reads %}{{ run.total_reads|intcomma }}{% else %}—{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Quality Score (Q30)</th>
+                    <td>{% if run.quality_score_q30 %}{{ run.quality_score_q30|floatformat:2 }}%{% else %}—{% endif %}</td>
+                </tr>
+            </table>
+
+            <!-- Analyses for this Run -->
+            {% if run.analysis_set.all %}
+            <h4>Analyses ({{ run.analysis_set.count }})</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analysis ID</th>
+                        <th>Type</th>
+                        <th>Pipeline</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for analysis in run.analysis_set.all %}
+                    <tr>
+                        <td>{{ analysis.analysis_id }}</td>
+                        <td>{{ analysis.get_analysis_type_display }}</td>
+                        <td>{{ analysis.pipeline_name }}</td>
+                        <td>{{ analysis.get_status_display }}</td>
+                        <td>{% if analysis.started_at %}{{ analysis.started_at|date:'Y-m-d H:i' }}{% else %}—{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p><em>No analyses for this run.</em></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    {% else %}
+    <section class="report-section">
+        <h2>Sequencing Runs</h2>
+        <p>No sequencing runs for this project.</p>
+    </section>
+    {% endif %}
+
+    <p><a href="{% url 'project_list' %}">Back to Projects</a></p>
+</div>
+{% endblock %}

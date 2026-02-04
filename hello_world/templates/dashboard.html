@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | Sequencing Lab{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}
+<a href="#">Home</a> / <span>Dashboard</span>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <div class="welcome-content">
+            <h2>Welcome to Sequencing Lab</h2>
+            <p>Manage your samples, sequencing runs, and bioinformatics analyses in one place.</p>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">📊</div>
+            <div class="stat-info">
+                <h3>Active Projects</h3>
+                <p class="stat-number">12</p>
+                <span class="stat-label">ongoing</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">🔬</div>
+            <div class="stat-info">
+                <h3>Total Samples</h3>
+                <p class="stat-number">248</p>
+                <span class="stat-label">catalogued</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">⚙️</div>
+            <div class="stat-info">
+                <h3>Analyses Complete</h3>
+                <p class="stat-number">1,847</p>
+                <span class="stat-label">processed</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon samples-icon">💾</div>
+            <div class="stat-info">
+                <h3>Storage Used</h3>
+                <p class="stat-number">2.4 TB</p>
+                <span class="stat-label">of 5 TB</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-section">
+        <h3>Recent Activity</h3>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon analysis"></div>
+                <div class="activity-content">
+                    <p class="activity-title">Analysis completed: Sample-2025-001</p>
+                    <span class="activity-time">2 hours ago</span>
+                </div>
+                <span class="activity-status success">Complete</span>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon sequencing"></div>
+                <div class="activity-content">
+                    <p class="activity-title">Sequencing run started: RUN-2026-025</p>
+                    <span class="activity-time">5 hours ago</span>
+                </div>
+                <span class="activity-status processing">Processing</span>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon upload"></div>
+                <div class="activity-content">
+                    <p class="activity-title">File upload completed: Project-Q1-2026</p>
+                    <span class="activity-time">1 day ago</span>
+                </div>
+                <span class="activity-status success">Complete</span>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon sample"></div>
+                <div class="activity-content">
+                    <p class="activity-title">Sample batch added: B-2026-001 to B-2026-024</p>
+                    <span class="activity-time">2 days ago</span>
+                </div>
+                <span class="activity-status success">Complete</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <button class="action-btn primary">New Project</button>
+            <button class="action-btn secondary">Upload Samples</button>
+            <button class="action-btn secondary">Start Analysis</button>
+            <button class="action-btn secondary">View Reports</button>
+        </div>
+    </section>
+
+    <!-- Data Overview -->
+    <section class="overview-section">
+        <div class="overview-card">
+            <h3>Data by Type</h3>
+            <ul class="data-list">
+                <li>RNA-seq: 89 projects</li>
+                <li>WES: 34 projects</li>
+                <li>WGS: 12 projects</li>
+                <li>Other: 5 projects</li>
+            </ul>
+        </div>
+
+        <div class="overview-card">
+            <h3>System Status</h3>
+            <ul class="status-list">
+                <li><span class="status-dot online"></span> All services online</li>
+                <li><span class="status-dot online"></span> Database operational</li>
+                <li><span class="status-dot online"></span> File storage available</li>
+                <li><span class="status-dot online"></span> Analysis pipeline ready</li>
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}

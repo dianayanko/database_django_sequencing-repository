@@ -1,25 +1,30 @@
 # GitHub Codespaces ♥️ Django
 
-Welcome to your shiny new Codespace running Django! We've got everything fired up and running for you to explore Django.
+# Bioinformatics Sample Management System
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with what you're seeing right now - where you go from here is up to you!
+## Cel projektu
+Webowa aplikacja Django służąca jako wewnętrzna baza danych
+do zarządzania próbkami biologicznymi, sekwencjonowaniem
+i analizą bioinformatyczną.
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
 
-## installing dependancies
 
-```python
-pip install -r requirements.txt
-```
+## Aktualny status
+- Django server działa
+- Admin panel aktywny
+- Migracje wykonane
+- Można dodawać Sample przez frontend
+- Sample zapisuje się w bazie i jest widoczny w /admin/
 
-## To collect static files:
+## Główne aplikacje
+- samples – próbki biologiczne (Sample, Donor, Tissue)
+- sequencing – sekwencjonowanie (Run, Platform, LibraryPrep)
+- analysis – analizy bioinformatyczne i metryki QC
+- files – metadane plików (FASTQ, BAM, VCF)
 
-```python
-python manage.py collectstatic
-```
-
-## To run this application:
-
-```python
-python manage.py runserver
-```
+## Logika danych (high-level)
+Donor
+ → Sample
+   → SequencingRun
+     → Analysis
+       → Metrics / Reports

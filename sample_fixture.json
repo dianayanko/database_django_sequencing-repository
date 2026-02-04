@@ -1,0 +1,30 @@
+[
+  {
+    "model": "samples.sample",
+    "pk": 101,
+    "fields": {
+      "sample_id": "S101",
+      "name": "Liver_Healthy_01",
+      "sample_type": "Liver tissue",
+      "organism": "Homo sapiens",
+      "sequencing_type": "RNA-seq",
+      "platform": "Illumina NovaSeq 6000",
+      "layout": "Paired-end",
+      "read_length": 150,
+      "metadata": {
+        "tissue": "liver (biopsy)",
+        "disease_status": "Healthy",
+        "collection_date": "2022-08-12",
+        "project": "PRJNA900001"
+      },
+      "sra_accession": "SRR9000001",
+      "files": {
+        "fastq_r1": "https://ncbi-placeholder.org/S101_R1.fastq.gz",
+        "fastq_r2": "https://ncbi-placeholder.org/S101_R2.fastq.gz",
+        "bam": "https://ncbi-placeholder.org/S101.bam"
+      },
+      "notes": "Peripheral liver biopsy from healthy control; total RNA library with poly-A selection."
+    }
+  }
+]
+python manage.py loaddata sample_fixture.json
