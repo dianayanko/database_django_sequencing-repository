@@ -8,17 +8,9 @@ do zarządzania próbkami biologicznymi, sekwencjonowaniem
 i analizą bioinformatyczną.
 
 
-
-## Aktualny status
-- Django server działa
-- Admin panel aktywny
-- Migracje wykonane
-- Można dodawać Sample przez frontend
-- Sample zapisuje się w bazie i jest widoczny w /admin/
-
 ## Główne aplikacje
 - samples – próbki biologiczne (Sample, Donor, Tissue)
-- sequencing – sekwencjonowanie (Run, Platform, LibraryPrep)
+- sequencing – sekwencjonowanie (Run, Platform)
 - analysis – analizy bioinformatyczne i metryki QC
 - files – metadane plików (FASTQ, BAM, VCF)
 
